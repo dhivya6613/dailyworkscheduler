@@ -62,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
         adddata.setOnClickListener(
             new View.OnClickListener(){
                 public void onClick(View v){
-                    boolean isInserted=mydb.insertData(editname.getText().toString(),
+                    boolean isInserted=mydb.create_to_schedule(editname.getText().toString(),
                             editpriority.getText().toString(),
                             edittime.getText().toString(),
                             editappr.getText().toString());
-                    if(isInserted==true)
+                    if(isInserted)
                         Toast.makeText(MainActivity.this,"data inserted",Toast.LENGTH_LONG).show();
                     else
                         Toast.makeText(MainActivity.this,"data not inserted",Toast.LENGTH_LONG).show();
