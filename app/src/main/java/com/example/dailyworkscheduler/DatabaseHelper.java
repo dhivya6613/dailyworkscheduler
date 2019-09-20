@@ -39,7 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context,DATABASE_NAME , null, 1);
 
     }
-    SQLiteDatabase db=this.getWritableDatabase();
+
 
     //tables are created here
 
@@ -57,6 +57,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME2);
         onCreate(db);
@@ -65,7 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
    public boolean create_to_schedule(String w_name ,String prior,String req_time ,String a_time){
 
 
-
+        SQLiteDatabase db=this.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put(col_2,w_name);
         contentValues.put(col_3,prior);
@@ -86,7 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean create_time_hours(String timefrom,String timeto){
 
 
-
+        SQLiteDatabase db=this.getWritableDatabase();
         ContentValues timeValues=new ContentValues();
         timeValues.put(col_7,timefrom);
         timeValues.put(col_8,timeto);
@@ -104,12 +105,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }}
 
-public Cursor retrieve(){
+    public Cursor retrievework(){
         //query for selecting work with maximum priority
-    SQLiteDatabase mydb=this.getReadableDatabase();
-    Cursor cursor =mydb.rawQuery("select max(workname) from to_schedule order by priority desc",null);
-    return cursor;
-}
+        SQLiteDatabase mydb=this.getReadableDatabase();
+        Cursor cursor =mydb.rawQuery("select * from to_schedule order by priority desc",null);
+        if(cursor.getCount()!=0) Log.i("query","has data");
+        return cursor;
+    }
+    public Cursor retrievetimefrom(){
+        //query for selecting work with maximum priority
+        SQLiteDatabase mydb=this.getReadableDatabase();
+        Cursor cursor =mydb.rawQuery("select time_from  from free_hours where time_from>CURRENT_TIME ",null);
+        if(cursor.getCount()!=0) Log.i("query","has data");
+        return cursor;
+    }
 
     // closing database
     public void closeDB() {

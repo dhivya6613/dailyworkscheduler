@@ -51,16 +51,26 @@ public class Activity2 extends AppCompatActivity {
                     @Override
                     //here i tried to store the query value in a string str
                     public void onClick(View v) {
-                        Cursor res=mydb.retrieve();
+                        Cursor res=mydb.retrievework();
                         if(res.getCount()==0) {
                             Log.i("res","no data");
                             return;
                         }
                         StringBuffer str=new StringBuffer();
-                        str.append(res.getString(1));
+                        while(res.moveToNext()) {
+                            str.append(res.getString(1));
 
+                        }
+                       /* Cursor timefrom=mydb.retrievework();
+                        if(timefrom.getCount()==0) {
+                            Log.i("time from","no data");
+                            return;
+                        }
+                        StringBuffer time=new StringBuffer();
+                        while(timefrom.moveToNext()) {
+                            str.append(timefrom.getString(1));
 
-
+                        }*/
                         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                         String NOTIFICATION_CHANNEL_ID = "my_channel_id_01";
 
@@ -70,7 +80,7 @@ public class Activity2 extends AppCompatActivity {
                             // Configure the notification channel.
                             notificationChannel.setDescription("Channel description");
                             notificationChannel.enableLights(true);
-                            notificationChannel.setLightColor(Color.RED);
+                            notificationChannel.setLightColor(Color.WHITE);
                             notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
                             notificationChannel.enableVibration(true);
                             notificationManager.createNotificationChannel(notificationChannel);
@@ -86,7 +96,7 @@ public class Activity2 extends AppCompatActivity {
                                 .setTicker("Hearty365")
                                 .setPriority(NotificationManager.IMPORTANCE_MAX)
                                 .setContentTitle("work is scheduled")
-                                .setContentText("Hi,dhivya ,do the work: "+str)
+                                .setContentText("Hi dhivya,do the work: "+str)
                                 .setChannelId(NOTIFICATION_CHANNEL_ID)
                                 .setOngoing(true)
                                 .setContentInfo("Info");
