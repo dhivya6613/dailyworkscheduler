@@ -1,18 +1,15 @@
 package com.example.dailyworkscheduler;
-
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -23,13 +20,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class Activity2 extends AppCompatActivity {
-    DatabaseHelper mydb;
+    DatabaseHelper mydb = new DatabaseHelper(this);
     EditText timefrom,timeto;
     Button startbutton;
     Button notifybutton;
 
+
+
     public static final String TAG = BuildConfig.APPLICATION_ID;
     public String mNotificationChannelId = null;
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,18 +38,60 @@ public class Activity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        mydb = new DatabaseHelper(this);
+
         timefrom = (EditText) findViewById(R.id.timefrom);
         timeto = (EditText) findViewById(R.id.timeto);
         startbutton = (Button) findViewById(R.id.login);
         notifybutton = (Button) findViewById(R.id.notify);
 
+
         addData();
         notifybutton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
+                    //here i tried to store the query value in a string str
                     public void onClick(View v) {
-                        addNotification();
+                        Cursor res=mydb.retrieve();
+                        if(res.getCount()==0) {
+                            Log.i("res","no data");
+                            return;
+                        }
+                        StringBuffer str=new StringBuffer();
+                        str.append(res.getString(1));
+
+
+
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        String NOTIFICATION_CHANNEL_ID = "my_channel_id_01";
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_HIGH);
+
+                            // Configure the notification channel.
+                            notificationChannel.setDescription("Channel description");
+                            notificationChannel.enableLights(true);
+                            notificationChannel.setLightColor(Color.RED);
+                            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+                            notificationChannel.enableVibration(true);
+                            notificationManager.createNotificationChannel(notificationChannel);
+                        }
+
+
+                        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(Activity2.this, "NOTIFICATION_CHANNEL_ID");
+
+                        notificationBuilder.setAutoCancel(true)
+                                .setDefaults(Notification.DEFAULT_ALL)
+                                .setWhen(System.currentTimeMillis())
+                                .setSmallIcon(R.drawable.ic_menu_add)
+                                .setTicker("Hearty365")
+                                .setPriority(NotificationManager.IMPORTANCE_MAX)
+                                .setContentTitle("work is scheduled")
+                                .setContentText("Hi,dhivya ,do the work: "+str)
+                                .setChannelId(NOTIFICATION_CHANNEL_ID)
+                                .setOngoing(true)
+                                .setContentInfo("Info");
+
+                        notificationManager.notify(/*notification id*/1, notificationBuilder.build());
                         Log.i("notification",     "notification is called" );
                     }
                 }
@@ -58,42 +100,7 @@ public class Activity2 extends AppCompatActivity {
 
     }
 
-    private void addNotification() {
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        int notifyId = 1;
 
-        Notification notification = new Notification.Builder(Activity2.this)
-                .setContentTitle("Some Message")
-                .setContentText("You've received new messages!")
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .build();
-
-
-        notificationManager.notify(notifyId, notification);
-    }
-    public NotificationChannel createNotificationChannel() {
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        String channelId = "some_channel_id";
-        CharSequence channelName = "Some Channel";
-        int importance = NotificationManager.IMPORTANCE_LOW;
-        NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, importance);
-        notificationChannel.enableLights(true);
-        notificationChannel.setLightColor(Color.RED);
-        notificationChannel.enableVibration(true);
-        notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-        notificationManager.createNotificationChannel(notificationChannel);
-        return notificationChannel;
-    }
-    public String getNotificationChannelId() {
-        if(mNotificationChannelId == null) {
-            NotificationChannel notificationChannel = createNotificationChannel();
-            mNotificationChannelId = notificationChannel.getId();
-        }
-        return mNotificationChannelId;
-    }
     public void addData(){
         startbutton.setOnClickListener(
 
@@ -124,12 +131,9 @@ public class Activity2 extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

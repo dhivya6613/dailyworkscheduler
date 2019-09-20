@@ -1,6 +1,8 @@
 package com.example.dailyworkscheduler;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -38,6 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
     SQLiteDatabase db=this.getWritableDatabase();
+
     //tables are created here
 
     @Override
@@ -71,6 +74,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         long result=db.insert(TABLE_NAME,null,contentValues);
 
+
        Log.i("dhivya",     "result value is : " + result);
 
         if(result==-1)
@@ -99,6 +103,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.i(TAG, "values added in free hours table");
             return true;
     }}
+
+public Cursor retrieve(){
+        //query for selecting work with maximum priority
+    SQLiteDatabase mydb=this.getReadableDatabase();
+    Cursor cursor =mydb.rawQuery("select max(workname) from to_schedule order by priority desc",null);
+    return cursor;
+}
+
     // closing database
     public void closeDB() {
         SQLiteDatabase db = this.getReadableDatabase();
