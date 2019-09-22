@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,11 +22,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dailyworkscheduler.Activity2;
 import com.example.dailyworkscheduler.MainActivity;
 import com.example.dailyworkscheduler.R;
-import com.example.dailyworkscheduler.ui.login.LoginViewModel;
-import com.example.dailyworkscheduler.ui.login.LoginViewModelFactory;
 
 public class LoginActivity extends AppCompatActivity{
 
@@ -43,6 +39,7 @@ public class LoginActivity extends AppCompatActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 

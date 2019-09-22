@@ -1,8 +1,6 @@
 package com.example.dailyworkscheduler;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -24,7 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String col_2="workname";
     public static final String col_3="priority";
     public static final String col_4="req_time";
-    public static final String col_5="appr_time";
+
 
     //columns in free_hours table
 
@@ -34,7 +32,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //database is created here
 
-    public DatabaseHelper(Context context ) {
+    public DatabaseHelper(Activity2 context ) {
+        //database is created by calling this constructor
+        super(context,DATABASE_NAME , null, 1);
+
+    }
+
+    public DatabaseHelper(MainActivity context ) {
         //database is created by calling this constructor
         super(context,DATABASE_NAME , null, 1);
 
@@ -46,7 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL("create table "+ TABLE_NAME + "(t_workid integer primary key autoincrement ,workname text ,priority integer ,req_time time ,appr_time text)");
+        db.execSQL("create table "+ TABLE_NAME + "(t_workid integer primary key autoincrement ,workname text ,priority integer ,req_time time)");
         Log.i(TAG, "to_schedule table is created");
         db.execSQL("create table "+ TABLE_NAME2+ "(free_time_id integer primary key autoincrement ,time_from time ,time_to time)");
         Log.i(TAG, "free hours table is created");
@@ -63,7 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-   public boolean create_to_schedule(String w_name ,String prior,String req_time ,String a_time){
+   public boolean create_to_schedule(String w_name ,String prior,String req_time){
 
 
         SQLiteDatabase db=this.getWritableDatabase();
@@ -71,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(col_2,w_name);
         contentValues.put(col_3,prior);
         contentValues.put(col_4,req_time);
-        contentValues.put(col_5,a_time);
+
 
         long result=db.insert(TABLE_NAME,null,contentValues);
 

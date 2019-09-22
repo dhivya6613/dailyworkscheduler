@@ -1,5 +1,5 @@
-package com.example.dailyworkscheduler;
 
+package com.example.dailyworkscheduler;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,15 +36,15 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      //  Toolbar toolbar = findViewById(R.id.toolbar);
-       // setSupportActionBar(toolbar);
+        //  Toolbar toolbar = findViewById(R.id.toolbar);
+        // setSupportActionBar(toolbar);
 
         mydb = new DatabaseHelper(this);
 
         editname=(EditText)findViewById(R.id.w_name);
         editpriority=(EditText)findViewById(R.id.prior);
         edittime=(EditText) findViewById(R.id.req_time);
-        editappr=(EditText)findViewById(R.id.a_time);
+
         adddata=(Button)findViewById(R.id.add_data);
 
         /*FloatingActionButton fab = findViewById(R.id.fab);
@@ -58,21 +58,21 @@ public class MainActivity extends AppCompatActivity {
         addData();
     }
 
-   public void addData(){
+    public void addData(){
         adddata.setOnClickListener(
-            new View.OnClickListener(){
-                public void onClick(View v){
-                    boolean isInserted=mydb.create_to_schedule(editname.getText().toString(),
-                            editpriority.getText().toString(),
-                            edittime.getText().toString(),
-                            editappr.getText().toString());
-                    if(isInserted)
-                        Toast.makeText(MainActivity.this,"data inserted",Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(MainActivity.this,"data not inserted",Toast.LENGTH_LONG).show();
-                    dataInserted();
+                new View.OnClickListener(){
+                    public void onClick(View v){
+                        boolean isInserted=mydb.create_to_schedule(editname.getText().toString(),
+                                editpriority.getText().toString(),
+                                edittime.getText().toString()
+                              );
+                        if(isInserted)
+                            Toast.makeText(MainActivity.this,"data inserted",Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MainActivity.this,"data not inserted",Toast.LENGTH_LONG).show();
+                        dataInserted();
+                    }
                 }
-            }
         );
     }
     private void dataInserted(){

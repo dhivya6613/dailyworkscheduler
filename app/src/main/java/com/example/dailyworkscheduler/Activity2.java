@@ -2,9 +2,7 @@ package com.example.dailyworkscheduler;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -20,7 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class Activity2 extends AppCompatActivity {
-    DatabaseHelper mydb = new DatabaseHelper(this);
+    DatabaseHelper mydb1;
     EditText timefrom,timeto;
     Button startbutton;
     Button notifybutton;
@@ -34,7 +32,7 @@ public class Activity2 extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
 
-
+        mydb1 = new DatabaseHelper(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
@@ -51,7 +49,7 @@ public class Activity2 extends AppCompatActivity {
                     @Override
                     //here i tried to store the query value in a string str
                     public void onClick(View v) {
-                        Cursor res=mydb.retrievework();
+                        Cursor res=mydb1.retrievework();
                         if(res.getCount()==0) {
                             Log.i("res","no data");
                             return;
@@ -117,7 +115,7 @@ public class Activity2 extends AppCompatActivity {
                 new View.OnClickListener(){
                     public void onClick(View v){
 
-                        boolean isInserted=mydb.create_time_hours(timefrom.getText().toString(),
+                        boolean isInserted=mydb1.create_time_hours(timefrom.getText().toString(),
                                 timeto.getText().toString());
                         if(isInserted==true)
                             Toast.makeText(Activity2.this,"data inserted",Toast.LENGTH_LONG).show();
