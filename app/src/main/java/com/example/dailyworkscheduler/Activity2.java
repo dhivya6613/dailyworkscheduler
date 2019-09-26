@@ -90,6 +90,7 @@ public class Activity2 extends AppCompatActivity {
                         notificationBuilder.setAutoCancel(true)
                                 .setDefaults(Notification.DEFAULT_ALL)
                                 .setWhen(System.currentTimeMillis())
+                                .setLights(Color.GREEN, 3000, 3000)
                                 .setSmallIcon(R.drawable.ic_menu_add)
                                 .setTicker("Hearty365")
                                 .setPriority(NotificationManager.IMPORTANCE_MAX)
@@ -132,7 +133,7 @@ public class Activity2 extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }

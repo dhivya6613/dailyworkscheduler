@@ -10,6 +10,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TAG = "TIME_ACTIVITY";
     //database name-scheduler database
     public static final String DATABASE_NAME="scheduler.db";
+    public static final String TABLE_USERS = "users";
+
+    //TABLE USERS COLUMNS
+    //ID COLUMN @primaryKey
+    public static final String KEY_ID = "id";
+
+    //COLUMN user name
+    public static final String KEY_USER_NAME = "username";
+
+    //COLUMN email
+    public static final String KEY_EMAIL = "email";
+
+    //COLUMN password
+    public static final String KEY_PASSWORD = "password";
+
+    //SQL for creating users table
+    public static final String SQL_TABLE_USERS = " CREATE TABLE " + TABLE_USERS
+            + " ( "
+            + KEY_ID + " INTEGER PRIMARY KEY, "
+            + KEY_USER_NAME + " TEXT, "
+            + KEY_EMAIL + " TEXT, "
+            + KEY_PASSWORD + " TEXT"
+            + " ) ";
 
     //name of two tables used in database
 
@@ -54,7 +77,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.i(TAG, "to_schedule table is created");
         db.execSQL("create table "+ TABLE_NAME2+ "(free_time_id integer primary key autoincrement ,time_from time ,time_to time)");
         Log.i(TAG, "free hours table is created");
-
+        db.execSQL(SQL_TABLE_USERS );
+        Log.i(TAG,"user table is created");
 
 
     }
@@ -123,6 +147,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(cursor.getCount()!=0) Log.i("query","has data");
         return cursor;
     }
+
+
 
     // closing database
     public void closeDB() {
