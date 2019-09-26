@@ -21,6 +21,8 @@
             </intent-filter>
         </receiver>
 
+        <service android:name=".MyService">
+        </service>
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="Daily Work Scheduler">

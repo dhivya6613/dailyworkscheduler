@@ -66,7 +66,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context,DATABASE_NAME , null, 1);
 
     }
+    public DatabaseHelper(MyService context ) {
+        //database is created by calling this constructor
+        super(context,DATABASE_NAME , null, 1);
 
+    }
 
     //tables are created here
 
@@ -136,7 +140,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor retrievework(){
         //query for selecting work with maximum priority
         SQLiteDatabase mydb=this.getReadableDatabase();
-        Cursor cursor =mydb.rawQuery("select * from to_schedule order by priority desc",null);
+        Cursor cursor =mydb.rawQuery("select max(workname) from to_schedule order by priority desc",null);
         if(cursor.getCount()!=0) Log.i("query","has data");
         return cursor;
     }

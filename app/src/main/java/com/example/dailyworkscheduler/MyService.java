@@ -8,32 +8,47 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-
-public class MyService extends Service {
+public class MyService extends Service
+{
+    DatabaseHelper mydb1;
+    public static final String TAG = "rajasuba";
 
     ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // Query the database and show alarm if it applies
+        mydb1 = new DatabaseHelper(this);
+        Log.i(TAG, "Inside on start command");
 
-        // I don't want this service to stay in memory, so I stop it
-        // immediately after doing what I wanted it to do.
         super.onStartCommand(intent,flags ,startId);
         final Intent intent1 = new Intent(this, MyService.class);
 
         scheduler.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
+                Log.i(TAG,"inside run in broadcast receiver");
+                Cursor res=mydb1.retrievework();
+                if(res.getCount()==0) {
+                    Log.i(TAG,"no data");
+                    return;
+                }
+                StringBuffer str=new StringBuffer();
+                while(res.moveToNext()) {
+                    str.append(res.getString(1));
+                    Log.i(TAG,"String value retrieved from database");
+
+                }
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 String NOTIFICATION_CHANNEL_ID = "my_channel_id_01";
 
@@ -59,7 +74,7 @@ public class MyService extends Service {
                         .setTicker("Hearty365")
                         .setPriority(NotificationManager.IMPORTANCE_MAX)
                         .setContentTitle("work is scheduled")
-                        .setContentText("Hi dhivya,do the work: ")
+                        .setContentText("Hi dhivya,do the work: "+str)
                         .setChannelId(NOTIFICATION_CHANNEL_ID)
                         .setLights(Color.GREEN, 3000, 3000)
                         .setOngoing(true)
@@ -70,6 +85,7 @@ public class MyService extends Service {
                 stopSelf();
             }
         },3,3,SECONDS);
+        mydb1.closeDB();
         return START_NOT_STICKY;
     }
 
